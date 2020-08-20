@@ -1,0 +1,10 @@
+this folder contains the files necessary to run some of the codes for the manuscript.
+It contains the namelist for:
+
+1) western regime case 20180428
+2) eastern regime case 20170311
+
+and matlab codes for:
+
+3) changing the terrain elevation in the 3rd and 4th domain
+4) west east locations used for hovmoller diagrams
