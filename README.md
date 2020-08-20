@@ -1,5 +1,3 @@
 # sundownerUpstreamTopoEffects
 
-https://zenodo.org/badge/latestdoi/289035894
-
-https://zenodo.org/badge/289035894.svg
+10.5281/zenodo.3993280
