@@ -1,10 +1,9 @@
 this folder contains the files necessary to run some of the codes for the manuscript.
 It contains the namelist for:
 
-1) western regime case 20180428
-2) eastern regime case 20170311
+1) eastern regime case 20170311. Dates can be easily adapted to obtain western regime case.
 
 and matlab codes for:
 
-3) changing the terrain elevation in the 3rd and 4th domain
-4) west east locations used for hovmoller diagrams
+3) changing the terrain elevation in the 3rd and 4th domain (.m file)
+4) west east locations used for hovmoller diagrams (.mat file)
