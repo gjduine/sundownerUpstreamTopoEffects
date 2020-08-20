@@ -5,5 +5,5 @@ It contains the namelist for:
 
 and matlab codes for:
 
-3) changing the terrain elevation in the 3rd and 4th domain (.m file)
+3) changing the terrain elevation in the 3rd and 4th domain (.m files ending with SRM075 etc)
 4) west east locations used for hovmoller diagrams (.mat file)
