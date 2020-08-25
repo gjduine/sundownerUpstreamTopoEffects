@@ -9,7 +9,7 @@
 ;; =================================
 
 ; To run entire program from the IDL command line, run the command below
-;.run '/home/zigner/idl_programs/mapgrid_labels.pro' '/home/zigner/idl_programs/GertJan_April2020_WRF_wind_plot.pro'
+;.run '/yourpath/mapgrid_labels.pro' '/yourpath/Fig03.pro'
 
 
 ;;; INPUT  ;;;
