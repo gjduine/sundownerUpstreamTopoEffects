@@ -1,132 +1,233 @@
-% script to plot cx sections
+% script to read and plot supplemental figure 10
 
 clear;clc;tic
 
+% some constants
+rd=287.05;
+cp=1004;
+rdcp=rd/cp; 
+crit_rib=0.25;
+clear('rd','cp')
 
 
-% first load the two different datasets
-WRF=load(strcat('/home/sbarc/wrf/wrf401/sundowners/20170311/WRF_cxSects_sensSRM.mat'));
-
-runs={'run_64452560_z0_1way','run_64452560_z0_SRM075','run_64452560_z0_SRM010'};
-runX=runs;
+% swex
+load('/home/duine/sundowners/swex0/data/model/swex-0_vertProfs_sensSRM_moreLocs_SRMonly.mat');
+WRFSwex=WRF;    clear('WRF')
 
 
-runsTitle={'(a) control','(b) 25% red.','(c) 90% red.',...
-            '(d) control','(e) 25% red.','(f) 90% red.'};
+% march 2017
+load('/home/duine/sundowners/20170311/data/model/20170311_vertProfs_sensSRM_moreLocs_SRMonly.mat')
+WRFMarch=WRF;   clear('WRF')
 
-% THIS IS SELF-IMPLEMENTED, SO CHECK IT.
-stations_cx={'KVBG','concepcion', 'Refugio', 'KSBA', 'Montecito', 'carp', 'gap'};
-
-
-%%
-
-plotLimsX=[34.3 34.8];
-plotLimsHgt=[0 5000];
-times=[27,33];%25:55];
+sims={'1way','SRM075','SRM050',...
+    'SRM030','SRM010'};
+simsStr=sims;
+legStr={'control','25% red.','50% red.','70% red.','90% red.'};
 
 
-   
-for cx=[5]%:7
-close
-fig=figGD('off');
-c=1; % this is acounter
-
-for t=times
-    [cx,t]
-for r=1:length(runs)
-    runX=runs{r}
-% V-component
-% close
-% fig=figGD('on')
-ax3(c)=subplot_tight(2,3,c,[0.05 0.05]);
-box on; hold on
+  
 
 
 
-line(WRF.(runX).lats(cx,:),WRF.(runX).HGT(cx,:),'LineWidth',2,'color','k')
-hold on
-h3=contourf(repmat(WRF.(runX).lats(cx,:),size(WRF.(runX).z(cx,:,:,t),3),1)',...
-    squeeze(WRF.(runX).z(cx,:,:,t))+WRF.(runX).HGT(cx,:)',...
-    squeeze(WRF.(runX).V(cx,:,:,t)),[-30:1:30],'edgecolor','none');
-bwr=flipud(bluewhitered(30));
-colormap(ax3(c),bwr);
-caxis([-15 15])
-set(gca,'CLim',[-15 15])
-hold on
+cmap=[0 0 0; 0 0 1; 0 1 0; 1 0 1; 0.64 0.16 0.16]; % black
 
-% theta v contour
-[c2,m2]=contour(repmat(WRF.(runX).lats(cx,:),size(WRF.(runX).z(cx,:,:,t),3),1)',...
-    squeeze(WRF.(runX).z(cx,:,:,t))+WRF.(runX).HGT(cx,:)',...
-    squeeze(WRF.(runX).thetaV(cx,:,:,t)),[280:2:320],'k','LineStyle','-','LineWidth',2,'ShowText','on');
-clabel(c2,m2,'FontSize',14)
+%% start plotting
 
+indSt=21;
+indEnd=49;
 
-% PBL height
-l1=line(WRF.(runX).lats(cx,:),WRF.(runX).HGT(cx,:)+WRF.(runX).PBLH(cx,:,t),...
-    'LineStyle','-','LineWidth',3,'color',' g');
-
-% need to set it a second time.
-bwr=flipud(bluewhitered(30));
-colormap(ax3(c),bwr);
-caxis([-15 15])
-if c==6
-    cbar=colorbar;
-    set(cbar,'YLim',[-15 15])
-    ylabel(cbar,'V-component [m s^{-1}]')
-end
-
-
-Ti(c)=title(strcat(runsTitle{c},{' '},stations_cx{cx},{' - '},...
-    datestr(WRF.(runX).tnumPST(t),'yyyymmdd/HH:MM')));
-Ti(c).Position=[34.5800 5.0329e+03 0];
-
-
-set(gca,'XLim',plotLimsX,'YLim',plotLimsHgt,'TickDir','out')
-
-if (c==1) || (c==2) || (c==3)
-    set(gca,'XTickLabels',{''})
-end
-
-if c==5
-    xLab=xlabel('Latitude [N]');
-end
-
-if (c==4) || (c==5)
-    set(gca,'XTickLabels',{'34.3','34.4','34.5','34.6','34.7',''})
-end
-
-if (c==1) || (c==4)
-    ylabel('Elevation [km]')
-    set(gca,'YTick',[0 1000 2000 3000 4000 5000],...
-        'YTickLabels',{'0','1','2','3','4','5'})
-else
-    set(gca,'YTickLabels',{''})
-end
-if c==1
-    leg=legend([l1],{'PBLH'});
-    set(leg,'Location','NorthWest','FontSize',12)
-end
-
-box on
-c=c+1; % subplot count +1
-end
-end
-ax3(1).Position=[0.0500 0.5250 0.2667 0.4250];
-ax3(2).Position=[0.3267 0.5250 0.2667 0.4250];
-ax3(3).Position=[0.6033 0.5250 0.2667 0.4250];
-ax3(4).Position=[0.0500 0.0700 0.2667 0.4250];
-ax3(5).Position=[0.3267 0.0700 0.2667 0.4250];
-ax3(6).Position=[0.6033 0.0700 0.2667 0.4250];
-cbar.Position=[0.8849 0.3200 0.0112 0.4255];
-xLab.Position=[34.5500 -318.6667 -1.0000];
-
-
-set(findall(gcf, '-property', 'FontSize'), 'FontSize', 18)
-
-figName=strcat('FigS10');
-export_fig(figName,'-pdf')
+% refugio station is st 10
+% montecito station is 7
 
 close
+figGD('off')
 
+s1=subplot_tight(2,4,1,[0.08 0.05]);
+hold on; grid on; box on
+st=10; % refugio upvalley
+for s=1:length(sims)
+    simX=strcat('s',sims{s});
+    p3c(s)=plot(NaN,NaN,...
+        'color',cmap(s,:),'LineWidth',2,'LineStyle','-',...
+        'MarkerSize',5);
+    p1(s)=line(WRFSwex.(simX).tnumPST(21:49),WRFSwex.(simX).V4000(st,21:49),...
+        'color',cmap(s,:),'LineWidth',2);
 end
+textA=text(WRFSwex.(simX).tnumPST(indSt+2),1,'(a)','FontWeight','bold');
+Title1= text(WRFSwex.(simX).tnumPST(indSt+15),3,'Western regime - Refugio upvalley','FontWeight','bold');
+textYlab=text(WRFSwex.(simX).tnumPST(indSt)-datenum(0,0,0,6,0,0),-25,...
+    'V-component [m s^{-1}]','rotation',90);
+leg=legend([p3c(:)],legStr{:});    set(leg,'Location','SouthWest')
+ylabel('4000 MSL')
+ax1=gca;
+set(ax1,'YLim',[-16 2],...
+    'XLim',[WRFSwex.(simX).tnumPST(indSt) WRFSwex.(simX).tnumPST(indEnd)],'XTickLabel',{''})
+datetick('x','dd/HH','keeplimits')
+
+
+s2=subplot_tight(2,4,2,[0.08 0.05]);
+hold on; grid on; box on
+textB=text(WRFSwex.(simX).tnumPST(indSt+2),1,'(b)','FontWeight','bold');
+for s=1:length(sims)
+    simX=strcat('s',sims{s});
+    p3c(s)=plot(NaN,NaN,...
+        'color',cmap(s,:),'LineWidth',2,'LineStyle','-',...
+        'MarkerSize',5);
+    p1(s)=line(WRFSwex.(simX).tnumPST(21:49),WRFSwex.(simX).V1500(st,21:49),...
+        'color',cmap(s,:),'LineWidth',2);
+end
+ylabel('1500 MSL')
+ax1=gca;
+set(ax1,'YLim',[-16 2],'YTickLabel',{''},...
+    'XLim',[WRFSwex.(simX).tnumPST(indSt) WRFSwex.(simX).tnumPST(indEnd)])
+datetick('x','dd/HH','keeplimits')
+
+
+st=7; % monteicto upvalley
+s3=subplot_tight(2,4,3,[0.08 0.05]);
+hold on; grid on; box on
+textC=text(WRFSwex.(simX).tnumPST(indSt+2),1,'(c)','FontWeight','bold');
+Title2= text(WRFSwex.(simX).tnumPST(indSt+15),3,'Western regime - Montecito upvalley','FontWeight','bold');
+for s=1:length(sims)
+    simX=strcat('s',sims{s});
+    p3c(s)=plot(NaN,NaN,...
+        'color',cmap(s,:),'LineWidth',2,'LineStyle','-',...
+        'MarkerSize',5);
+    p1(s)=line(WRFSwex.(simX).tnumPST(21:49),WRFSwex.(simX).V4000(st,21:49),...
+        'color',cmap(s,:),'LineWidth',2);
+end
+textXlab1=text(WRFSwex.(simX).tnumPST(1),-18,'Time in April 2018 [dd/HH]'); 
+ylabel('4000 MSL')
+ax1=gca;
+set(ax1,'YLim',[-16 2],'YTickLabel',{''},...
+    'XLim',[WRFSwex.(simX).tnumPST(indSt) WRFSwex.(simX).tnumPST(indEnd)])
+datetick('x','dd/HH','keeplimits')
+
+
+s4=subplot_tight(2,4,4,[0.08 0.05]);
+hold on; grid on; box on
+textD=text(WRFSwex.(simX).tnumPST(indSt+2),1,'(d)','FontWeight','bold');
+for s=1:length(sims)
+    simX=strcat('s',sims{s});
+    p3c(s)=plot(NaN,NaN,...
+        'color',cmap(s,:),'LineWidth',2,'LineStyle','-',...
+        'MarkerSize',5);
+    p1(s)=line(WRFSwex.(simX).tnumPST(21:49),WRFSwex.(simX).V1500(st,21:49),...
+        'color',cmap(s,:),'LineWidth',2);
+end
+ylabel('1500 MSL')
+ax1=gca;
+set(ax1,'YLim',[-16 2],'YTickLabel',{''},...
+    'XLim',[WRFSwex.(simX).tnumPST(indSt) WRFSwex.(simX).tnumPST(indEnd)])
+datetick('x','dd/HH','keeplimits')
+
+
+
+s5=subplot_tight(2,4,5,[0.08 0.05]);
+hold on; grid on; box on
+st=10; % refugio upvalley
+textE=text(WRFMarch.(simX).tnumPST(indSt+2),1,'(e)','FontWeight','bold');
+Title3= text(WRFMarch.(simX).tnumPST(indSt+15),3,' Eastern regime - Refugio upvalley','FontWeight','bold');
+for s=1:length(sims)
+    simX=strcat('s',sims{s});
+    p3c(s)=plot(NaN,NaN,...
+        'color',cmap(s,:),'LineWidth',2,'LineStyle','-',...
+        'MarkerSize',5);
+    p1(s)=line(WRFMarch.(simX).tnumPST(21:49),WRFMarch.(simX).V4000(st,21:49),...
+        'color',cmap(s,:),'LineWidth',2);
+end
+ylabel('4000 MSL')
+ax1=gca;
+set(ax1,'YLim',[-16 2],...
+    'XLim',[WRFMarch.(simX).tnumPST(indSt) WRFMarch.(simX).tnumPST(indEnd)],'XTickLabel',{''})
+datetick('x','dd/HH','keeplimits')
+
+
+s6=subplot_tight(2,4,6,[0.08 0.05]);
+hold on; grid on; box on
+textF=text(WRFMarch.(simX).tnumPST(indSt+2),1,'(f)','FontWeight','bold');
+for s=1:length(sims)
+    simX=strcat('s',sims{s});
+    p3c(s)=plot(NaN,NaN,...
+        'color',cmap(s,:),'LineWidth',2,'LineStyle','-',...
+        'MarkerSize',5);
+    p1(s)=line(WRFMarch.(simX).tnumPST(21:49),WRFMarch.(simX).V1500(st,21:49),...
+        'color',cmap(s,:),'LineWidth',2);
+end
+ylabel('1500 MSL')
+ax1=gca;
+set(ax1,'YLim',[-16 2],'YTickLabel',{''},...
+    'XLim',[WRFMarch.(simX).tnumPST(indSt) WRFMarch.(simX).tnumPST(indEnd)])
+datetick('x','dd/HH','keeplimits')
+
+
+st=7; % monteicto upvalley
+s7=subplot_tight(2,4,7,[0.08 0.05]);
+hold on; grid on; box on
+textG=text(WRFMarch.(simX).tnumPST(indSt+2),1,'(g)','FontWeight','bold');
+Title4= text(WRFMarch.(simX).tnumPST(indSt+15),3,' Eastern regime - Montecito upvalley','FontWeight','bold');
+for s=1:length(sims)
+    simX=strcat('s',sims{s});
+    p3c(s)=plot(NaN,NaN,...
+        'color',cmap(s,:),'LineWidth',2,'LineStyle','-',...
+        'MarkerSize',5);
+    p1(s)=line(WRFMarch.(simX).tnumPST(21:49),WRFMarch.(simX).V4000(st,21:49),...
+        'color',cmap(s,:),'LineWidth',2);
+end
+textXlab2=text(WRFMarch.(simX).tnumPST(1),-18,'Time in March 2017 [dd/HH]');   ylabel('4000 MSL')
+ax1=gca;
+set(ax1,'YLim',[-16 2],'YTickLabel',{''},...
+    'XLim',[WRFMarch.(simX).tnumPST(indSt) WRFMarch.(simX).tnumPST(indEnd)])
+datetick('x','dd/HH','keeplimits')
+
+
+s8=subplot_tight(2,4,8,[0.08 0.05]);
+hold on; grid on; box on
+texth=text(WRFMarch.(simX).tnumPST(indSt+2),1,'(h)','FontWeight','bold');
+for s=1:length(sims)
+    simX=strcat('s',sims{s});
+    p3c(s)=plot(NaN,NaN,...
+        'color',cmap(s,:),'LineWidth',2,'LineStyle','-',...
+        'MarkerSize',5);
+    p1(s)=line(WRFMarch.(simX).tnumPST(21:49),WRFMarch.(simX).V1500(st,21:49),...
+        'color',cmap(s,:),'LineWidth',2);
+end
+ylabel('1500 MSL')
+ax1=gca;
+set(ax1,'YLim',[-16 2],'YTickLabel',{''},...
+    'XLim',[WRFMarch.(simX).tnumPST(indSt) WRFMarch.(simX).tnumPST(indEnd)])
+datetick('x','dd/HH','keeplimits')
+
+
+
+
+
+set(findall(gcf, '-property', 'FontSize'), 'FontSize', 14)
+
+set(textYlab,'FontSize',18)
+set(textXlab1,'FontSize',18)
+set(textXlab2,'FontSize',18)
+
+set(Title1,'FontSize',16)
+set(Title2,'FontSize',16)
+set(Title3,'FontSize',16)
+set(Title4,'FontSize',16)
+
+
+set(s2,'Position',[0.2675 0.5400 0.1875 0.3800])
+set(s3,'Position',[0.4850 0.5400 0.1875 0.3800])
+set(s4,'Position',[0.7025 0.5400 0.1875 0.3800])
+
+set(s6,'Position',[0.2675 0.0800 0.1875 0.3800])
+set(s7,'Position',[0.4850 0.0800 0.1875 0.3800])
+set(s8,'Position',[0.7025 0.0800 0.1875 0.3800])
+
+
+export_fig(strcat('FigS10'),'-png');
+export_fig(strcat('FigS10'),'-pdf');
+
+
+
+
+
 toc
