@@ -1,4 +1,4 @@
-% script to plot figure 6 manuscript on influence of terrain
+% script to plot figure s8 manuscript on influence of terrain
 % modification on Sundowner wind diurnal variability
 
 % Gert-Jan Duine, UCSB
@@ -15,33 +15,42 @@ clear('rd','cp')
 
 
 % swex datafile
-load('/home/sbarc/duine/sundowners/swex0/data/model/swex-0_vertProfs_sensSRM_moreLocs.mat');
+load('/home/sbarc/duine/sundowners/swex0/data/model/swex-0_vertProfs_sensSRM_moreLocs_stc.mat');
 WRFSwex=WRF;    clear('WRF')
 
 
 % march 2017 datafile
-load('/home/sbarc/duine/sundowners/20170311/data/model/20170311_vertProfs_sensSRM_moreLocs.mat')
+load('/home/sbarc/duine/sundowners/20170311/data/model/20170311_vertProfs_sensSRM_moreLocs_stc.mat')
 WRFMarch=WRF;   clear('WRF')
 
-sims={'1way','SRM075','SRM050',...
-    'SRM030','SRM010'};
+sims={'1way','SRM010','SRM010_stc1',...
+    'SRM010_stc2','SRM010_stc3','SRM010_stc4'};
 simsStr=sims;
-legStr={'control','25% red.','50% red.','70% red.','90% red.'};
+legStr={'control','90% red.','90% red. stc1-stc4'};
+%     '90% red. stc2','90% red. stc3','90% red. stc4'};
 
 %% plotting from here
 %%%% some plotting constants. We plot stuff.
 
 WRFSwex.dateSt=datenum(2018,4,27,18,0,0);%tnumPST(indSt));
-WRFSwex.dateEnd=datenum(2018,4,29,12,0,0);%tnumPST(indEnd));
+WRFSwex.dateEnd=datenum(2018,4,29,8,0,0);%tnumPST(indEnd));
 WRFSwex.indSt=find(WRFSwex.s1way.tnumPST==WRFSwex.dateSt);
 WRFSwex.indEnd=find(WRFSwex.s1way.tnumPST==WRFSwex.dateEnd);
 
 WRFMarch.dateSt=datenum(2017,3,10,18,0,0);%tnumPST(indSt));
-WRFMarch.dateEnd=datenum(2017,3,12,12,0,0);%tnumPST(indEnd));
+WRFMarch.dateEnd=datenum(2017,3,12,8,0,0);%tnumPST(indEnd));
 WRFMarch.indSt=find(WRFMarch.s1way.tnumPST==WRFMarch.dateSt);
 WRFMarch.indEnd=find(WRFMarch.s1way.tnumPST==WRFMarch.dateEnd);
 
-cmap=[0 0 0; 0 0 1; 0 1 0; 1 0 1; 0.64 0.16 0.16]; % color scheme
+% cmap=[0 0 0; 0 0 1; 0 1 0; 1 0 1; 0.64 0.16 0.16]; % color scheme
+% cmap=[0 0 0; 0.64 0.16 0.16; 1 0 0;
+%     1 0 0; 1 0 0; 1 0 0]; % color scheme based on red
+cmap=[0 0 0; 0 0 1; 0 0.8 1;
+    0 0.8 1; 0 0.8 1; 0 0.8 1]; % color scheme based on blue
+cmap=[0 0 0; 0 0.5 0; 0.2 0.8 0.2;
+    0.2 0.8 0.2;0.2 0.8 0.2;0.2 0.8 0.2]; % color scheme based on blue
+
+LineWidths=[2 2 1 1 1 1];
 
 close
 figGD('off')
@@ -51,10 +60,11 @@ hold on; grid on; box on
 st=8; % refugio station
 for s=1:length(sims)
     simX=strcat('s',sims{s}); % wind speed
-    p3c(s)=plot(WRFSwex.(simX).tnumPST(:),WRFSwex.(simX).wspd10_st(st,:),...
-        'color',cmap(s,:),'LineWidth',2,'LineStyle','-'); % only plot total rainfall
+    p3c(s)=plot(WRFSwex.(simX).tnumPST(WRFSwex.indSt:WRFSwex.indEnd),...
+        WRFSwex.(simX).wspd10_st(st,WRFSwex.indSt:WRFSwex.indEnd),...
+        'color',cmap(s,:),'LineWidth',LineWidths(s),'LineStyle','-'); % only plot total rainfall
 end
-leg=legend([p3c(:)],legStr{:});
+leg=legend([p3c(1:3)],legStr{1:3});
 set(leg,'Location','SouthWest')
 xlabel('Time PST in April 2018 [dd/HH]')
 ylabel('Wind speed [m s^{-1}]')
@@ -73,8 +83,9 @@ ax1b = axes('Position',get(ax1a,'Position'),'XAxisLocation', 'top',...
 hold on
 for s=1:length(sims)
     simX=strcat('s',sims{s}); % wind direction
-    p3d=plot(WRFSwex.(simX).tnumPST(:),WRFSwex.(simX).wdir10_st(st,:),...
-        'color',cmap(s,:),'LineWidth',2,'LineStyle','none',...
+    p3d=plot(WRFSwex.(simX).tnumPST(WRFSwex.indSt:WRFSwex.indEnd),...
+        WRFSwex.(simX).wdir10_st(st,WRFSwex.indSt:WRFSwex.indEnd),...
+        'color',cmap(s,:),'LineWidth',LineWidths(s),'LineStyle','none',...
         'Marker','x','Parent',ax1b); % only plot total rainfall
 end
 datetick('x','dd/HH','keeplimits')
@@ -91,8 +102,9 @@ ti1=title(strcat('(a) Western regime - Refugio'));
 % st=2;
 % for s=1:length(sims)
 %     simX=strcat('s',sims{s});
-%     p3c(s)=plot(WRFSwex.(simX).tnumPST(:),WRFSwex.(simX).wspd10_st(st,:),...
-%         'color',cmap(s,:),'LineWidth',2,'LineStyle','-'); % only plot total rainfall
+%     p3c(s)=plot(WRFSwex.(simX).tnumPST(WRFSwex.indSt:WRFSwex.indEnd),...
+%         WRFSwex.(simX).wspd10_st(st,WRFSwex.indSt:WRFSwex.indEnd),...
+%         'color',cmap(s,:),'LineWidth',LineWidths(s),'LineStyle','-'); % only plot total rainfall
 % end
 % xlabel('Time PST in April 2018 [dd/HH]')
 % datetick('x','dd/HH','keeplimits')
@@ -110,8 +122,9 @@ ti1=title(strcat('(a) Western regime - Refugio'));
 % hold on
 % for s=1:length(sims)
 %     simX=strcat('s',sims{s});
-%     p3d=plot(WRFSwex.(simX).tnumPST(:),WRFSwex.(simX).wdir10_st(st,:),...
-%         'color',cmap(s,:),'LineWidth',2,'LineStyle','none',...
+%     p3d=plot(WRFSwex.(simX).tnumPST(WRFSwex.indSt:WRFSwex.indEnd),...
+%         WRFSwex.(simX).wdir10_st(st,WRFSwex.indSt:WRFSwex.indEnd),...
+%         'color',cmap(s,:),'LineWidth',LineWidths(s),'LineStyle','none',...
 %         'Marker','x','Parent',ax2b); % only plot total rainfall
 % end
 % datetick('x','dd/HH','keeplimits')
@@ -128,8 +141,9 @@ hold on; grid on; box on
 st=5; % montecito nr.
 for s=1:length(sims)
     simX=strcat('s',sims{s});
-    p3c=plot(WRFSwex.(simX).tnumPST(:),WRFSwex.(simX).wspd10_st(st,:),...
-        'color',cmap(s,:),'LineWidth',2,'LineStyle','-'); % only plot total rainfall
+    p3c=plot(WRFSwex.(simX).tnumPST(WRFSwex.indSt:WRFSwex.indEnd),...
+        WRFSwex.(simX).wspd10_st(st,WRFSwex.indSt:WRFSwex.indEnd),...
+        'color',cmap(s,:),'LineWidth',LineWidths(s),'LineStyle','-'); % only plot total rainfall
 end
 xlabel('Time PST in April 2018 [dd/HH]')
 datetick('x','dd/HH','keeplimits')
@@ -148,8 +162,9 @@ ax3b = axes('Position',get(ax3a,'Position'),'XAxisLocation', 'top',...
 hold on
 for s=1:length(sims)
     simX=strcat('s',sims{s});
-    p3d=plot(WRFSwex.(simX).tnumPST(:),WRFSwex.(simX).wdir10_st(st,:),...
-        'color',cmap(s,:),'LineWidth',2,'LineStyle','none',...
+    p3d=plot(WRFSwex.(simX).tnumPST(WRFSwex.indSt:WRFSwex.indEnd),...
+        WRFSwex.(simX).wdir10_st(st,WRFSwex.indSt:WRFSwex.indEnd),...
+        'color',cmap(s,:),'LineWidth',LineWidths(s),'LineStyle','none',...
         'Marker','x','Parent',ax3b); % only plot total rainfall
 end
 datetick('x','dd/HH','keeplimits')
@@ -167,7 +182,7 @@ st=8;
 for s=1:length(sims)
     simX=strcat('s',sims{s});
     p3c(s)=plot(WRFMarch.(simX).tnumPST(:),WRFMarch.(simX).wspd10_st(st,:),...
-        'color',cmap(s,:),'LineWidth',2,'LineStyle','-'); % only plot total rainfall
+        'color',cmap(s,:),'LineWidth',LineWidths(s),'LineStyle','-'); % only plot total rainfall
 end
 xlabel('Time PST in March 2017 [dd/HH]')
 ylabel('Wind speed [m s^{-1}]')
@@ -188,7 +203,7 @@ hold on
 for s=1:length(sims)
     simX=strcat('s',sims{s});
     p3d=plot(WRFMarch.(simX).tnumPST(:),WRFMarch.(simX).wdir10_st(st,:),...
-        'color',cmap(s,:),'LineWidth',2,'LineStyle','none',...
+        'color',cmap(s,:),'LineWidth',LineWidths(s),'LineStyle','none',...
         'Marker','x','Parent',ax4b); % only plot total rainfall
 end
 datetick('x','dd/HH','keeplimits')
@@ -196,7 +211,7 @@ set(ax4b,'XLim',[WRFMarch.dateSt WRFMarch.dateEnd],'XTickLabel',{''},'YLim',[0 3
     'YTick',[0 90 180 270 360],'YTickLabel',{'N','E','S','W','N'})
 % ylabel('Wind direction')
 set(ax4b,'XTickLabel',{''})
-ti4=title(strcat('(c) Eastern regime - Refugio'));
+ti4=title(strcat('(b) Eastern regime - Refugio'));
 
 
 % 
@@ -207,7 +222,7 @@ ti4=title(strcat('(c) Eastern regime - Refugio'));
 % for s=1:length(sims)
 %     simX=strcat('s',sims{s});
 %     p3c(s)=plot(WRFMarch.(simX).tnumPST(:),WRFMarch.(simX).wspd10_st(st,:),...
-%         'color',cmap(s,:),'LineWidth',2,'LineStyle','-'); % only plot total rainfall
+%         'color',cmap(s,:),'LineWidth',LineWidths(s),'LineStyle','-'); % only plot total rainfall
 % end
 % xlabel('Time PST in March 2017 [dd/HH]')
 % datetick('x','dd/HH','keeplimits')
@@ -227,7 +242,7 @@ ti4=title(strcat('(c) Eastern regime - Refugio'));
 % for s=1:length(sims)
 %     simX=strcat('s',sims{s});
 %     p3d=plot(WRFMarch.(simX).tnumPST(:),WRFMarch.(simX).wdir10_st(st,:),...
-%         'color',cmap(s,:),'LineWidth',2,'LineStyle','none',...
+%         'color',cmap(s,:),'LineWidth',LineWidths(s),'LineStyle','none',...
 %         'Marker','x','Parent',ax5b); % only plot total rainfall
 % end
 % datetick('x','dd/HH','keeplimits')
@@ -244,7 +259,7 @@ st=5; % montecito nr.
 for s=1:length(sims)
     simX=strcat('s',sims{s});
     p3c=plot(WRFMarch.(simX).tnumPST(:),WRFMarch.(simX).wspd10_st(st,:),...
-        'color',cmap(s,:),'LineWidth',2,'LineStyle','-'); % only plot total rainfall
+        'color',cmap(s,:),'LineWidth',LineWidths(s),'LineStyle','-'); % only plot total rainfall
 end
 xlabel('Time PST in March 2017 [dd/HH]')
 datetick('x','dd/HH','keeplimits')
@@ -264,7 +279,7 @@ hold on
 for s=1:length(sims)
     simX=strcat('s',sims{s});
     p3d=plot(WRFMarch.(simX).tnumPST(:),WRFMarch.(simX).wdir10_st(st,:),...
-        'color',cmap(s,:),'LineWidth',2,'LineStyle','none',...
+        'color',cmap(s,:),'LineWidth',LineWidths(s),'LineStyle','none',...
         'Marker','x','Parent',ax6b); % only plot total rainfall
 end
 datetick('x','dd/HH','keeplimits')
@@ -299,8 +314,7 @@ set(ax4b,'Position',[0.0500 0.1000 0.2667 0.3500])
 set(sp6,'Position',[0.3567 0.1000 0.2667 0.3500])
 set(ax6b,'Position',[0.3567 0.1000 0.2667 0.3500])
 
-
-export_fig(strcat('FigS02'),'-pdf');
+export_fig(strcat('FigS03'),'-pdf');
 
 
 

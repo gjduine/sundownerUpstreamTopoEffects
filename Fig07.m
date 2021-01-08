@@ -50,7 +50,7 @@ tnums=datenum(yr,mo,days,14,0,0);
 for i=1:length(days)
     [~,tid(i)]=min(abs(tnums(i)-WRF.SRM100.tnumPST));
 	times=[tid(i) tid(i)+6];
-for cx=[1]%:7
+for cx=[3]%:7
 close
 fig=figGD('off');
 c=1; % this is a counter
@@ -147,7 +147,7 @@ xLab.Position=[34.5500 -318.6667 -1.0000];
 set(findall(gcf, '-property', 'FontSize'), 'FontSize', 18)
 
 
-figName=strcat('Fig06');
+figName=strcat('Fig07');
 export_fig(figName,'-pdf')
 
 close

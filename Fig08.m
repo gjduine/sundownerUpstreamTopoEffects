@@ -30,10 +30,10 @@ stations_cx={'Refugio', 'KSBA', 'Montecito'};
 plotLimsX=[34.3 34.8];
 plotLimsHgt=[0 5000];
 
-regX=1;
+regX=2;
 
 regime={'western','eastern'};
-daysRegime=[26];
+daysRegime=[26;11];
 % daysRegime=[22,23,25,26,27;     % western
 %             6,8,11,28,29];      % eastern
 % daysEast=[6,8,11,28,29];
@@ -147,7 +147,7 @@ xLab.Position=[34.5500 -318.6667 -1.0000];
 set(findall(gcf, '-property', 'FontSize'), 'FontSize', 18)
 
 
-figName=strcat('Fig06');
+figName=strcat('Fig08');
 export_fig(figName,'-pdf')
 
 close

@@ -11,17 +11,17 @@
 clear;clc;tic;
 
 % read-in file
-folder='/home/voyager-sbarc/hysplit/sundowners/swex-0/run-64452560-z0-1way/10m_back/';
+folder='/home/voyager-sbarc/hysplit/sundowners/sensSRM/SRM100/10m_back/';
 
-dateSt=datenum(2018,4,28,20,0,0); % hours in UTC
-dateEnd=datenum(2018,4,29,8,0,0);
+
+dateSt=datenum(2017,3,26,22,0,0); % hours in UTC
+dateEnd=datenum(2017,3,27,10,0,0);
 Out = datevec(dateSt:6/24:dateEnd);
 tnumHourly=datenum(Out); clear Out
 
 numLocs=3; % number of trajectory locations in file,  only use two
 
-
-fname='SWEX0_tdump_back_'; % file names
+fname='201703_SRM100_western_tdump_back_'; % file names
 for f=1:length(tnumHourly)
     file=strcat(folder,fname,datestr(tnumHourly(f),'yyyymmddHHMM')); % other part of filenames
         
@@ -116,10 +116,10 @@ markers={'x','o','p'};
 
     hold on
     shading interp
-    tr=2; % refugio
+    tr=1; % refugio
     for f=1:length(tnumHourly)
-        if length(traj_lon{tr,f})>=8 % for the trajecotires that are longer than 8 hours
-            legline(f)=plot(traj_lon{tr,f}(1:8),traj_lat{tr,f}(1:8),'LineWidth',3,'color',...
+        if length(traj_lon{tr,f})>=7 % for the trajecotires that are longer than 7 hours
+            legline(f)=plot(traj_lon{tr,f}(1:7),traj_lat{tr,f}(1:7),'LineWidth',3,'color',...
                 cmap2(f,:),'LineStyle','-','Marker',markers{f},'MarkerSize',10);
         else
             legline(f)=plot(traj_lon{tr,f},traj_lat{tr,f},'LineWidth',3,'color',...
@@ -143,8 +143,8 @@ markers={'x','o','p'};
     %
     tr=3; % montecito
     for f=1:length(tnumHourly)
-        if length(traj_lon{tr,f})>=8 % for the trajecotires that are longer than 8 hours
-            legline2(f)=plot(traj_lon{tr,f}(1:8),traj_lat{tr,f}(1:8),'LineWidth',3,'color',...
+        if length(traj_lon{tr,f})>=7 % for the trajecotires that are longer than 8 hours
+            legline2(f)=plot(traj_lon{tr,f}(1:7),traj_lat{tr,f}(1:7),'LineWidth',3,'color',...
                 cmap3(f,:),'LineStyle','-','Marker',markers{f},'MarkerSize',10);
         else
             legline2(f)=plot(traj_lon{tr,f},traj_lat{tr,f},'LineWidth',3,'color',...
@@ -199,7 +199,7 @@ markers={'x','o','p'};
     sp2=subplot_tight(1,1,1,[0.15 0.25]);
     hold on;
     for f=1:length(tnumHourly)
-        tr=2; % refugio
+        tr=1; % refugio
         p2a(f)=plot(traj_hour{tr,f},traj_pressure{tr,f},'LineWidth',3,...
             'color',cmap2(f,:),'LineStyle','-','Marker',markers{f},'MarkerSize',10);
         legStr2a(f)=tnumPDT{tr,f}(1);
@@ -215,7 +215,7 @@ markers={'x','o','p'};
     set(leg,'Location','East')
    
     
-    set(gca,'XLim',[-8 0],'YDir','reverse','XDir','reverse')
+    set(gca,'XLim',[-7 0],'YDir','reverse','XDir','reverse')
     
     ylabel('Pressure [hPa]')
     xlabel('Time before trajectory end [hours]')
@@ -223,14 +223,14 @@ markers={'x','o','p'};
 
     a=axes('position',get(gca,'position'),'visible','off'); % TRICK to get second legend to work :)
     leg2=legend(a,[p3(:)],{datestr(legStr3(:))}); hold on;
-    set(leg2,'Position',[0.550 0.3499 0.1540 0.0684])
-    set(leg,'Position',[0.550 0.2603 0.1540 0.0684])
+    set(leg2,'Position',[0.550 0.4599 0.1540 0.0684])
+    set(leg,'Position',[0.550 0.3303 0.1540 0.0684])
    
-    title('Backward trajectories 12h - swex-0 case study 1way')
+%     title('Backward trajectories 12h - swex-0 case study 1way')
 
-    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 20)
-    set(leg,'FontSize',16)
-    set(leg2,'FontSize',16)
+    set(findall(gcf, '-property', 'FontSize'), 'FontSize', 28)
+    set(leg,'FontSize',24)
+    set(leg2,'FontSize',24)
     
     figName=strcat('Fig09b');
     export_fig(figName,'-pdf')
