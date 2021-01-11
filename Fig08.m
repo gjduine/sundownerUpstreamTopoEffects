@@ -1,4 +1,4 @@
-% script to read in and plot cross sections for figure 10
+% script to read in and plot cross sections for figure 8
 % manuscript on influence of terrain modification on Sundowner wind diurnal 
 % variability
 

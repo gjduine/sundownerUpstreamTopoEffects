@@ -1,6 +1,8 @@
-% script to read and plot data from the month-long runs with SRM100, SRM050
-% and SRM010.
-% G.J. Duine, UCSB, July 2019.
+% script to plot supplemental figure 5b/c manuscript on influence of terrain
+% modification on Sundowner wind diurnal variability
+
+% Gert-Jan Duine, UCSB
+% gertjan.duine@gmail.com; duine@eri.ucsb.edu
 
 clear;clc;tic;
 

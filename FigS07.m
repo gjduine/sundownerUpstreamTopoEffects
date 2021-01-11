@@ -1,6 +1,5 @@
-% script to read in and plot cross sections for figure 10
-% manuscript on influence of terrain modification on Sundowner wind diurnal 
-% variability
+% script to plot supplemental figure 7 manuscript on influence of terrain
+% modification on Sundowner wind diurnal variability
 
 % Gert-Jan Duine, UCSB
 % gertjan.duine@gmail.com; duine@eri.ucsb.edu

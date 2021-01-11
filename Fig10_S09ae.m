@@ -1,4 +1,9 @@
-% script to read the runs from WRF operational model during SWEX campaign
+% script to plot figure 10 and S9 a/e of manuscript on influence of terrain
+% modification on Sundowner wind diurnal variability
+
+% Gert-Jan Duine, UCSB, November 2020
+% gertjan.duine@gmail.com; duine@eri.ucsb.edu
+% 
 
 clear;clc;tic
 

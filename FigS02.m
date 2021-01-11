@@ -1,4 +1,4 @@
-% script to plot figure 6 manuscript on influence of terrain
+% script to plot supplemental figure 2 manuscript on influence of terrain
 % modification on Sundowner wind diurnal variability
 
 % Gert-Jan Duine, UCSB

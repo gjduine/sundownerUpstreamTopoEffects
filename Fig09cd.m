@@ -1,4 +1,4 @@
-% script to read in and plot hysplit trajectory data for figure 9ab
+% script to read in and plot hysplit trajectory data for figure 9cd
 % manuscript on influence of terrain modification on Sundowner wind diurnal 
 % variability
 

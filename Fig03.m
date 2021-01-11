@@ -1,4 +1,5 @@
-% script to read and plot data from the month-long runs with SRM100, SRM050
+% script to read and plot data related to figure 3  manuscript on influence of terrain
+% modification on Sundowner wind diurnal variability from the month-long runs with SRM100, SRM050
 % and SRM010.
 % G.J. Duine, UCSB, July 2019.
 
@@ -16,8 +17,9 @@ legStr={'control','25% red.','50% red.','90% red.'};
 
 % have decided on dates for eastern and western before
 % these are starting dates. This is for when both MSLP and wind metrics
-% exceed 95th percentile in their 30-yr distribution, then we compute the figure (so there can
-% be both days in both calculations)
+% exceed 95th percentile in their 30-yr distribution (see figures 4 and 5 
+% in supplemental material), then we compute the figure (so there can
+% be both days in both calculations). 
 yr=2017;    mo=3;
 daysWest=[22,23,25,26,27];
 daysEast=[6,8,11,28,29];
@@ -205,7 +207,7 @@ set(sp4,'Position',[0.3367 0.0600 0.2667 0.4250])
 % set(sp6,'Position',[0.6233 0.0600 0.2667 0.4250])
 
 
-export_fig(strcat('Fig03_SRM050'),'-png')
+export_fig(strcat('Fig03'),'-png')
 % export_fig(strcat('Fig03'),'-pdf')
 
 

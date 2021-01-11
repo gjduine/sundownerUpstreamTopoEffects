@@ -1,4 +1,8 @@
-% script to compute and plot statistics related to land
+% script to plot supplemental figure 4a/b manuscript on influence of terrain
+% modification on Sundowner wind diurnal variability
+
+% Gert-Jan Duine, UCSB
+% gertjan.duine@gmail.com; duine@eri.ucsb.edu
 
 clear;clc;tic
 

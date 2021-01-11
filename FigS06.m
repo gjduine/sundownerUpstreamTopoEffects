@@ -1,4 +1,8 @@
-% script to read and plot supplemental figure 10
+% script to plot supplemental figure 6 manuscript on influence of terrain
+% modification on Sundowner wind diurnal variability
+
+% Gert-Jan Duine, UCSB
+% gertjan.duine@gmail.com; duine@eri.ucsb.edu
 
 clear;clc;tic
 
